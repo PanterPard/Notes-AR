@@ -1,2 +1,2 @@
 # Notes-AR
-Additional reality notes project.
+Augmented reality notes project.
