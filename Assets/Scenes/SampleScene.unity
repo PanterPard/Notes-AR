@@ -231,6 +231,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 745066256}
+        m_TargetAssemblyTypeName: TextEditor, Assembly-CSharp
+        m_MethodName: InputFieldText
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &75905520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1021,6 +1033,7 @@ GameObject:
   - component: {fileID: 745066255}
   - component: {fileID: 745066254}
   - component: {fileID: 745066253}
+  - component: {fileID: 745066256}
   m_Layer: 5
   m_Name: InputField (Legacy)
   m_TagString: Untagged
@@ -1156,6 +1169,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 745066251}
   m_CullTransparentMesh: 1
+--- !u!114 &745066256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745066251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 767b0248f3e8aa4499ef10427c5d0a31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  output_text: {fileID: 264691905}
 --- !u!1 &846102889
 GameObject:
   m_ObjectHideFlags: 0
