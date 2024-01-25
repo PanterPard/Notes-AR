@@ -19,20 +19,41 @@ public class NotesCreator : MonoBehaviour
     public Text input_note_text;
     public Text input_note_image_url;
 
+    // Изображение
     public Texture2D note_image_file;
-    public float printed_target_size = 0.2f;
 
     // Создание заметки
     public void CreateNote()
     {
-        VuforiaApplication.Instance.OnVuforiaStarted += CreateImageTargetFromSideloadedTexture;
+        StartCoroutine(RetrieveTextureFromWeb());
     }
 
-    void CreateImageTargetFromSideloadedTexture()
+    IEnumerator RetrieveTextureFromWeb()
+    {
+        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(input_note_image_url.text))
+        {
+            yield return uwr.SendWebRequest();
+            if (uwr.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(uwr.error);
+                Debug.Log("Link: " + input_note_image_url.text);    
+            }
+            else
+            {
+                // Get downloaded texture once the web request completes
+                var texture = DownloadHandlerTexture.GetContent(uwr);
+                note_image_file = texture;
+                Debug.Log("Image downloaded " + uwr);
+                CreateImageTargetFromDownloadedTexture();
+            }
+        }
+    }
+
+    void CreateImageTargetFromDownloadedTexture()
     {
         var mTarget = VuforiaBehaviour.Instance.ObserverFactory.CreateImageTarget(
             note_image_file,
-            printed_target_size,
+            1f,
             input_note_name.text);
         // add the Default Observer Event Handler to the newly created game object
         mTarget.gameObject.AddComponent<DefaultObserverEventHandler>();
