@@ -2,37 +2,61 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
+using System.Net.Http.Headers;
 using Vuforia;
 using UnityEngine.Networking;
 
-public class NotesCreator : MonoBehaviour
+public class NotesLoader : MonoBehaviour
 {
     // Образец
     public GameObject note_prefab;
 
+    // CSV-файл
+    public TextAsset csv_file;
+
     // Поля ввода
-    public Text input_note_name;
-    public Text input_note_text;
-    public Text input_note_image_url;
+    public string input_note_name;
+    public string input_note_text;
+    public string input_note_image_url;
+
+    // Разделители
+    private char line_separator = '\n';
+    private char field_separator = ',';
 
     // Изображение
     public Texture2D note_image_file;
 
-    // Создание заметки
-    public void CreateNote()
+    public Text content_area;
+
+    public void ReadData()
+    {
+        string[] records = csv_file.text.Split(line_separator);
+        foreach (string record in records)
+        {
+            string[] fields = record.Split(field_separator);
+            foreach (string field in fields)
+            {
+                content_area.text += field + "\t";
+            }
+            content_area.text += '\n';
+        }
+    }
+
+    public void LoadNotes()
     {
         StartCoroutine(RetrieveTextureFromWeb());
     }
 
     IEnumerator RetrieveTextureFromWeb()
     {
-        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(input_note_image_url.text))
+        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(input_note_image_url))
         {
             yield return uwr.SendWebRequest();
             if (uwr.result != UnityWebRequest.Result.Success)
             {
                 Debug.Log(uwr.error);
-                Debug.Log("Link: " + input_note_image_url.text);    
+                Debug.Log("Link: " + input_note_image_url);
             }
             else
             {
@@ -50,12 +74,12 @@ public class NotesCreator : MonoBehaviour
         var mTarget = VuforiaBehaviour.Instance.ObserverFactory.CreateImageTarget(
             note_image_file,
             1f,
-            input_note_name.text);
+            input_note_name);
         // add the Default Observer Event Handler to the newly created game object
         mTarget.gameObject.AddComponent<DefaultObserverEventHandler>();
         Debug.Log("Instant Image Target created " + mTarget.TargetName);
 
-        GameObject note = GameObject.Find(input_note_name.text);
+        GameObject note = GameObject.Find(input_note_name);
 
         Instantiate(note_prefab, note.transform);
     }
