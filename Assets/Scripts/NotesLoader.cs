@@ -6,6 +6,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using Vuforia;
 using UnityEngine.Networking;
+using JetBrains.Annotations;
 
 public class NotesLoader : MonoBehaviour
 {
@@ -27,19 +28,28 @@ public class NotesLoader : MonoBehaviour
     // Изображение
     public Texture2D note_image_file;
 
-    public Text content_area;
-
     public void ReadData()
     {
         string[] records = csv_file.text.Split(line_separator);
-        foreach (string record in records)
+        for (int i = 1; i < records.Length - 1; i++)
         {
-            string[] fields = record.Split(field_separator);
-            foreach (string field in fields)
             {
-                content_area.text += field + "\t";
+                Debug.Log("Строки: " + records);
+
+                string record = records[i];
+
+                string[] fields = record.Split(field_separator);
+                foreach (string field in fields)
+                {
+                    if (fields.Length == 3)
+                    {
+                        input_note_name = fields[0];
+                        input_note_text = fields[1];
+                        input_note_image_url = fields[2];
+                    }
+                }
+                LoadNotes();
             }
-            content_area.text += '\n';
         }
     }
 
