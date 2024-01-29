@@ -6,7 +6,8 @@ using System.IO;
 using System.Net.Http.Headers;
 using Vuforia;
 using UnityEngine.Networking;
-using JetBrains.Annotations;
+using System.Threading;
+using System;
 
 public class NotesLoader : MonoBehaviour
 {
@@ -17,9 +18,13 @@ public class NotesLoader : MonoBehaviour
     public TextAsset csv_file;
 
     // Поля ввода
-    public string input_note_name;
-    public string input_note_text;
-    public string input_note_image_url;
+    public Text input_search_for_name;
+    public string search_for_name;
+
+    // Поля заметки
+    private string input_note_name;
+    private string input_note_text;
+    private string input_note_image_url;
 
     // Разделители
     private char line_separator = '\n';
@@ -28,34 +33,24 @@ public class NotesLoader : MonoBehaviour
     // Изображение
     public Texture2D note_image_file;
 
-    public void ReadData()
+    public void StartReadingData()
     {
-        string[] records = csv_file.text.Split(line_separator);
-        for (int i = 1; i < records.Length - 1; i++)
-        {
-            {
-                Debug.Log("Строки: " + records);
-
-                string record = records[i];
-
-                string[] fields = record.Split(field_separator);
-                foreach (string field in fields)
-                {
-                    if (fields.Length == 3)
-                    {
-                        input_note_name = fields[0];
-                        input_note_text = fields[1];
-                        input_note_image_url = fields[2];
-                    }
-                }
-                LoadNotes();
-            }
-        }
+        StartCoroutine(ReadData());
     }
 
-    public void LoadNotes()
+    IEnumerator ReadData()
     {
-        StartCoroutine(RetrieveTextureFromWeb());
+        string[] records = csv_file.text.Split(line_separator);
+        foreach (string record in records)
+        {
+            string[] fields = record.Split(field_separator);
+
+            input_note_name = fields[0];
+            input_note_text = fields[1];
+            input_note_image_url = fields[2];
+
+            yield return StartCoroutine(RetrieveTextureFromWeb());
+        }
     }
 
     IEnumerator RetrieveTextureFromWeb()
@@ -74,6 +69,7 @@ public class NotesLoader : MonoBehaviour
                 var texture = DownloadHandlerTexture.GetContent(uwr);
                 note_image_file = texture;
                 Debug.Log("Image downloaded " + uwr);
+
                 CreateImageTargetFromDownloadedTexture();
             }
         }
@@ -90,7 +86,10 @@ public class NotesLoader : MonoBehaviour
         Debug.Log("Instant Image Target created " + mTarget.TargetName);
 
         GameObject note = GameObject.Find(input_note_name);
-
         Instantiate(note_prefab, note.transform);
+
+        note.GetComponentInChildren<NoteDataBuffer>().trigger = true;
+        note.GetComponentInChildren<NoteDataBuffer>().note_name = input_note_name;
+        note.GetComponentInChildren<NoteDataBuffer>().note_text = input_note_text;
     }
 }

@@ -1,23 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class NoteDataBuffer : MonoBehaviour
 {
+    // Поля вывода
+    public Text output_note_name;
+    public Text output_note_text;
+
     // Данные
     public string note_name;
     public string note_text;
-    public int note_id;
 
-    // Объекты
-    public Text note_name_obj;
-    public Text note_text_obj;
+    // Триггер
+    public bool trigger = false;
 
-    // Перезапись данных в заметке
-    public void UpdateData()
+    private void FixedUpdate()
     {
-        note_name_obj.text = note_name;
-        note_text_obj.text = note_text;
+        if (trigger)
+        {
+            output_note_name.text = note_name;
+            output_note_text.text = note_text;
+
+            Destroy(this.GetComponent<NoteDataBuffer>());
+        }
     }
 }

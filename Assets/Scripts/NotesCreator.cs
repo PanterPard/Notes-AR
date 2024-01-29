@@ -56,7 +56,10 @@ public class NotesCreator : MonoBehaviour
         Debug.Log("Instant Image Target created " + mTarget.TargetName);
 
         GameObject note = GameObject.Find(input_note_name.text);
-
         Instantiate(note_prefab, note.transform);
+
+        note.GetComponentInChildren<NoteDataBuffer>().trigger = true;
+        note.GetComponentInChildren<NoteDataBuffer>().note_name = input_note_name.text;
+        note.GetComponentInChildren<NoteDataBuffer>().note_text = input_note_text.text;
     }
 }
