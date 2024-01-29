@@ -17,10 +17,6 @@ public class NotesLoader : MonoBehaviour
     // CSV-файл
     public TextAsset csv_file;
 
-    // Поля ввода
-    public Text input_search_for_name;
-    public string search_for_name;
-
     // Поля заметки
     private string input_note_name;
     private string input_note_text;
@@ -33,6 +29,12 @@ public class NotesLoader : MonoBehaviour
     // Изображение
     public Texture2D note_image_file;
 
+    // Визуализация загрузки
+    private float load_counter;
+    private float len;
+    public Text loading_bar;
+    public GameObject loading_bar_image;
+
     public void StartReadingData()
     {
         StartCoroutine(ReadData());
@@ -41,6 +43,7 @@ public class NotesLoader : MonoBehaviour
     IEnumerator ReadData()
     {
         string[] records = csv_file.text.Split(line_separator);
+        len = records.Length - 1;
         foreach (string record in records)
         {
             string[] fields = record.Split(field_separator);
@@ -91,5 +94,20 @@ public class NotesLoader : MonoBehaviour
         note.GetComponentInChildren<NoteDataBuffer>().trigger = true;
         note.GetComponentInChildren<NoteDataBuffer>().note_name = input_note_name;
         note.GetComponentInChildren<NoteDataBuffer>().note_text = input_note_text;
+
+        load_counter += 1;
+
+        loading_bar.text = "Загрузка... (" + load_counter + "/" + len + ")";
+        loading_bar_image.GetComponent<UnityEngine.UI.Image>().fillAmount = load_counter / len;
+        
+        if (load_counter >= len)
+        {
+            Invoke("HideLoadingBar", 1);
+        }
+    }
+
+    private void HideLoadingBar()
+    {
+        GameObject.Find("Load Note - Panel").SetActive(false);
     }
 }

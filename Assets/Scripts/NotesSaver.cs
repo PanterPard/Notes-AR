@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using System.IO;
-using System.Net.Http.Headers;
+using TMPro;
 
 public class NotesSaver : MonoBehaviour
 {
@@ -11,9 +8,9 @@ public class NotesSaver : MonoBehaviour
     public TextAsset csv_file;
 
     // Поля ввода
-    public Text input_note_name;
-    public Text input_note_text;
-    public Text input_note_image_url;
+    public TMP_InputField input_note_name;
+    public TMP_InputField input_note_text;
+    public TMP_InputField input_note_image_url;
 
     // Разделители
     private char line_separator = '\n';

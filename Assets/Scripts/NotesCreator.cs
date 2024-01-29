@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 using Vuforia;
 using UnityEngine.Networking;
 
@@ -11,9 +10,9 @@ public class NotesCreator : MonoBehaviour
     public GameObject note_prefab;
 
     // Поля ввода
-    public Text input_note_name;
-    public Text input_note_text;
-    public Text input_note_image_url;
+    public TMP_InputField input_note_name;
+    public TMP_InputField input_note_text;
+    public TMP_InputField input_note_image_url;
 
     // Изображение
     public Texture2D note_image_file;
