@@ -1,21 +1,15 @@
 using UnityEngine;
 using System.IO;
-using TMPro;
 
-public class NotesSaver : MonoBehaviour
+public class NotesDeleter : MonoBehaviour
 {
     // CSV-файл
     public TextAsset csv_file;
 
-    // Поля ввода
-    public TMP_InputField input_note_name;
-    public TMP_InputField input_note_text;
-    public TMP_InputField input_note_image_url;
-
-    public void SaveNote()
+    public void DeleteNotes()
     {
-        File.AppendAllText(getPath() + "/Data/NotesData.csv", '\n' + input_note_name.text + ',' + input_note_text.text + ',' + input_note_image_url.text);
-        Debug.Log("Данные сохранены в CSV-файл.");
+        File.WriteAllText(getPath() + "/Data/NotesData.csv", "name,text,image_url");
+        Debug.Log("Данные CSV-файла очищены.");
     }
 
     private static string getPath()

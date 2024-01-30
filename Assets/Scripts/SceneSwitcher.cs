@@ -3,16 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour
 {
-    public string main_menu;
-    public string scanner;
+    public string scene_name;
 
-    public void OpenScanner()
+    public void SwitchScene()
     {
-        SceneManager.LoadScene(scanner);
-    }
-    
-    public void OpenMainMenu()
-    {
-        SceneManager.LoadScene(main_menu);
+        SceneManager.LoadScene(scene_name);
     }
 }

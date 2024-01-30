@@ -2,20 +2,24 @@ using UnityEngine;
 using System.IO;
 using TMPro;
 
-public class NotesSaver : MonoBehaviour
+public class SettingsManager : MonoBehaviour
 {
-    // CSV-файл
     public TextAsset csv_file;
 
-    // Поля ввода
-    public TMP_InputField input_note_name;
-    public TMP_InputField input_note_text;
-    public TMP_InputField input_note_image_url;
+    public TMP_InputField input_browser;
 
-    public void SaveNote()
+    public void Awake()
     {
-        File.AppendAllText(getPath() + "/Data/NotesData.csv", '\n' + input_note_name.text + ',' + input_note_text.text + ',' + input_note_image_url.text);
-        Debug.Log("Данные сохранены в CSV-файл.");
+        string[] records = csv_file.text.Split('\n');
+        string[] fields = records[1].Split(',');
+        {
+            input_browser.text = fields[0];
+        }
+    }
+
+    public void WriteSettingsData()
+    {
+        File.WriteAllText(getPath() + "/Data/UserSettings.csv", "browser" + '\n' + input_browser.text);
     }
 
     private static string getPath()

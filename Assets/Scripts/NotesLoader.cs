@@ -1,13 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using System.IO;
-using System.Net.Http.Headers;
 using Vuforia;
 using UnityEngine.Networking;
-using System.Threading;
-using System;
+using TMPro;
 
 public class NotesLoader : MonoBehaviour
 {
@@ -22,37 +17,43 @@ public class NotesLoader : MonoBehaviour
     private string input_note_text;
     private string input_note_image_url;
 
-    // Разделители
-    private char line_separator = '\n';
-    private char field_separator = ',';
-
     // Изображение
     public Texture2D note_image_file;
 
     // Визуализация загрузки
     private float load_counter;
     private float len;
-    public Text loading_bar;
+    public TMP_Text loading_bar_text;
     public GameObject loading_bar_image;
 
-    public void StartReadingData()
+    public void Awake()
     {
         StartCoroutine(ReadData());
     }
 
     IEnumerator ReadData()
     {
-        string[] records = csv_file.text.Split(line_separator);
-        len = records.Length - 1;
-        foreach (string record in records)
+        string[] records = csv_file.text.Split('\n');
+
+        if (records.Length != 1)
         {
-            string[] fields = record.Split(field_separator);
+            len = records.Length - 1;
 
-            input_note_name = fields[0];
-            input_note_text = fields[1];
-            input_note_image_url = fields[2];
+            for (int i = 1; i < records.Length; i++)
+            {
+                string[] fields = records[i].Split(',');
 
-            yield return StartCoroutine(RetrieveTextureFromWeb());
+                input_note_name = fields[0];
+                input_note_text = fields[1];
+                input_note_image_url = fields[2];
+
+                yield return StartCoroutine(RetrieveTextureFromWeb());
+            }
+        }
+
+        else
+        {
+            HideLoadingBar();
         }
     }
 
@@ -97,17 +98,17 @@ public class NotesLoader : MonoBehaviour
 
         load_counter += 1;
 
-        loading_bar.text = "Загрузка... (" + load_counter + "/" + len + ")";
+        loading_bar_text.text = "Загрузка... (" + load_counter + "/" + len + ")";
         loading_bar_image.GetComponent<UnityEngine.UI.Image>().fillAmount = load_counter / len;
         
         if (load_counter >= len)
         {
-            Invoke("HideLoadingBar", 1);
+            Invoke("HideLoadingBar", 0.5f);
         }
     }
 
     private void HideLoadingBar()
     {
-        GameObject.Find("Load Note - Panel").SetActive(false);
+        GameObject.Find("Load Notes - Panel").SetActive(false);
     }
 }
